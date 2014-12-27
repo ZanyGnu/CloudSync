@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicasaDownloader", "Picasa\PicasaDownloader.csproj", "{3EBC8257-0AC9-4BBC-B8B2-39590838CE40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicasaDownloaderLib", "Picasa\PicasaDownloaderLib\PicasaDownloaderLib.csproj", "{7B1BF760-FCD0-4EB3-AC43-BF664CF2B08F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicasaDownloaderApp", "Picasa\PicasaDownloaderApp\PicasaDownloaderApp.csproj", "{511FED97-2EE6-40FD-92EE-3CA139D91642}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +17,14 @@ Global
 		{3EBC8257-0AC9-4BBC-B8B2-39590838CE40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EBC8257-0AC9-4BBC-B8B2-39590838CE40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EBC8257-0AC9-4BBC-B8B2-39590838CE40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B1BF760-FCD0-4EB3-AC43-BF664CF2B08F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B1BF760-FCD0-4EB3-AC43-BF664CF2B08F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B1BF760-FCD0-4EB3-AC43-BF664CF2B08F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B1BF760-FCD0-4EB3-AC43-BF664CF2B08F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{511FED97-2EE6-40FD-92EE-3CA139D91642}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{511FED97-2EE6-40FD-92EE-3CA139D91642}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{511FED97-2EE6-40FD-92EE-3CA139D91642}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{511FED97-2EE6-40FD-92EE-3CA139D91642}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
