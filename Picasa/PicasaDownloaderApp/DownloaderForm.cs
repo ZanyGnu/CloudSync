@@ -2,6 +2,7 @@
 namespace PicasaDownloaderApp
 {
     using CloudSync.PicasaDownloader;
+    using Google.GData.Client;
     using System;
     using System.ComponentModel;
     using System.Drawing;
@@ -20,8 +21,11 @@ namespace PicasaDownloaderApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            folderBrowserDialog1.ShowDialog();
-            textBoxDestinationPath.Text = folderBrowserDialog1.SelectedPath;
+            DialogResult result = folderBrowserDialog1.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                textBoxDestinationPath.Text = folderBrowserDialog1.SelectedPath;
+            }
         }
 
         private void textBoxUserName_TextChanged(object sender, EventArgs e)
@@ -54,11 +58,12 @@ namespace PicasaDownloaderApp
         }
 
         IProgress<int> reportIncrement = null;
-        IProgress<int> reportMaximum = null;
 
         private async void buttonDownload_Click(object sender, EventArgs e)
         {
+            Downloader downloader = null;
             Settings settings = new Settings();
+
             settings.Username = textBoxUserName.Text;
             settings.Password = maskedTextBoxPassword.Text;
             settings.DestinationRootPath = textBoxDestinationPath.Text;
@@ -70,30 +75,61 @@ namespace PicasaDownloaderApp
 
                     labelProgress.Text = String.Format("[{0} of {1}] {2} % completed", progressBar.Value.ToString("D4"), progressBar.Maximum.ToString("D4"), percent);
                 });
-            reportMaximum = new Progress<int>(value => progressBar.Maximum = value);
+
+
+            // Initialize UI to start processing data.
             progressBar.Minimum = 0;
             progressBar.Value = 0;
-            
-            buttonDownload.Enabled = false;
 
-            Downloader downloader = null;
+            checkBoxShowErrorDetails.Visible = false;
+            textBoxErrorMessage.Visible = false;
+            textBoxErrorMessage.Text = string.Empty;
+            checkBoxShowErrorDetails.Checked = false;
+            
+            // Prevent invoking another download
+            buttonDownload.Enabled = false;
 
             toolStripStatusLabel.Text = "Getting information from picasa service";
 
-            await Task.Factory.StartNew(
-                () => downloader = this.DownloadMetadata(settings),
-                TaskCreationOptions.LongRunning);
+            try
+            {
+                await Task.Factory.StartNew(
+                    () => downloader = this.DownloadMetadata(settings),
+                    TaskCreationOptions.LongRunning);
 
-            progressBar.Maximum = (int)downloader.TotalImageCount;
-            //reportMaximum.Report((int)downloader.TotalImageCount);
+                progressBar.Maximum = (int)downloader.TotalImageCount;
 
-            await Task.Factory.StartNew(
-                () => this.DownloadFiles(downloader),
-                TaskCreationOptions.LongRunning);
+                await Task.Factory.StartNew(
+                    () => this.DownloadFiles(downloader),
+                    TaskCreationOptions.LongRunning);
 
-            buttonDownload.Enabled = true;
-            toolStripStatusLabel.Text = "Done";
-            pictureBox.ImageLocation = "img\\picasa-icon.png";
+                toolStripStatusLabel.Text = "Done";
+
+            }
+            catch (InvalidCredentialsException invalidCredentials)
+            {
+                toolStripStatusLabel.Text = "Could not login. Incorrect username or password?";
+                checkBoxShowErrorDetails.Visible = true;
+                textBoxErrorMessage.Text = invalidCredentials.ToString();
+            }
+
+            catch (GDataRequestException requestException)
+            {
+                toolStripStatusLabel.Text = "Could not connect. Check internet connection?";
+                checkBoxShowErrorDetails.Visible = true;
+                textBoxErrorMessage.Text = requestException.ToString();
+            }
+            catch (Exception exception)
+            {
+                toolStripStatusLabel.Text = "Done with errors. (" + exception.ToString().Substring(0, 50) + "...";
+                textBoxErrorMessage.Text = exception.ToString();
+                checkBoxShowErrorDetails.Visible = true;
+            }
+            finally
+            {
+                buttonDownload.Enabled = true;
+                pictureBox.ImageLocation = "img\\picasa-icon.png";
+            }
         }
 
         private Downloader DownloadMetadata(Settings settings)
@@ -115,10 +151,11 @@ namespace PicasaDownloaderApp
         {
             reportIncrement.Report(1);
             toolStripStatusLabel.Text = "";
-            pictureBox.Invoke((MethodInvoker)delegate 
-            {
-                pictureBox.ImageLocation = localPath; 
-            }
+            pictureBox.Invoke(
+                (MethodInvoker) delegate 
+                {
+                    pictureBox.ImageLocation = localPath; 
+                }
             );
         }
 
@@ -132,31 +169,18 @@ namespace PicasaDownloaderApp
             toolStripStatusLabel.Text = text;
         }
 
-    }
-
-    public static class Extensions
-    {
-        private delegate void SetPropertyThreadSafeDelegate<TResult>(Control @this, Expression<Func<TResult>> property, TResult value);
-
-        public static void SetPropertyThreadSafe<TResult>(this Control @this, Expression<Func<TResult>> property, TResult value)
+        private void checkBoxShowErrorDetails_CheckedChanged(object sender, EventArgs e)
         {
-            var propertyInfo = (property.Body as MemberExpression).Member as PropertyInfo;
-
-            if (propertyInfo == null ||
-                !@this.GetType().IsSubclassOf(propertyInfo.ReflectedType) ||
-                @this.GetType().GetProperty(propertyInfo.Name, propertyInfo.PropertyType) == null)
+            if (checkBoxShowErrorDetails.Checked)
             {
-                throw new ArgumentException("The lambda expression 'property' must reference a valid property on this Control.");
-            }
-
-            if (@this.InvokeRequired)
-            {
-                @this.Invoke(new SetPropertyThreadSafeDelegate<TResult>(SetPropertyThreadSafe), new object[] { @this, property, value });
+                textBoxErrorMessage.Visible = true;
+                textBoxErrorMessage.BringToFront();
             }
             else
             {
-                @this.GetType().InvokeMember(propertyInfo.Name, BindingFlags.SetProperty, null, @this, new object[] { value });
+                textBoxErrorMessage.Visible = false;
             }
         }
+
     }
 }

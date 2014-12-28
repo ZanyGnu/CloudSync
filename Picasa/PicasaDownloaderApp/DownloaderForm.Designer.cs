@@ -40,11 +40,13 @@
             this.buttonDownload = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBoxErrorMessage = new System.Windows.Forms.TextBox();
             this.labelProgress = new System.Windows.Forms.Label();
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.checkBoxShowErrorDetails = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
@@ -164,11 +166,23 @@
             this.groupBox2.Controls.Add(this.labelProgress);
             this.groupBox2.Controls.Add(this.pictureBox);
             this.groupBox2.Controls.Add(this.progressBar);
+            this.groupBox2.Controls.Add(this.textBoxErrorMessage);
             this.groupBox2.Location = new System.Drawing.Point(284, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(283, 286);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
+            // 
+            // textBoxErrorMessage
+            // 
+            this.textBoxErrorMessage.Font = new System.Drawing.Font("Lucida Console", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxErrorMessage.Location = new System.Drawing.Point(0, 16);
+            this.textBoxErrorMessage.Multiline = true;
+            this.textBoxErrorMessage.Name = "textBoxErrorMessage";
+            this.textBoxErrorMessage.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBoxErrorMessage.Size = new System.Drawing.Size(282, 257);
+            this.textBoxErrorMessage.TabIndex = 3;
+            this.textBoxErrorMessage.Visible = false;
             // 
             // labelProgress
             // 
@@ -219,6 +233,20 @@
             this.toolStripStatusLabel.Name = "toolStripStatusLabel";
             this.toolStripStatusLabel.Size = new System.Drawing.Size(0, 17);
             // 
+            // checkBoxShowErrorDetails
+            // 
+            this.checkBoxShowErrorDetails.AutoSize = true;
+            this.checkBoxShowErrorDetails.Font = new System.Drawing.Font("Calibri", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBoxShowErrorDetails.Location = new System.Drawing.Point(457, 311);
+            this.checkBoxShowErrorDetails.Margin = new System.Windows.Forms.Padding(0);
+            this.checkBoxShowErrorDetails.Name = "checkBoxShowErrorDetails";
+            this.checkBoxShowErrorDetails.Size = new System.Drawing.Size(112, 17);
+            this.checkBoxShowErrorDetails.TabIndex = 11;
+            this.checkBoxShowErrorDetails.Text = "Show error details";
+            this.checkBoxShowErrorDetails.UseVisualStyleBackColor = true;
+            this.checkBoxShowErrorDetails.Visible = false;
+            this.checkBoxShowErrorDetails.CheckedChanged += new System.EventHandler(this.checkBoxShowErrorDetails_CheckedChanged);
+            // 
             // DownloaderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -226,6 +254,7 @@
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(578, 328);
+            this.Controls.Add(this.checkBoxShowErrorDetails);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -267,6 +296,8 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.TextBox textBoxErrorMessage;
+        private System.Windows.Forms.CheckBox checkBoxShowErrorDetails;
     }
 }
 
